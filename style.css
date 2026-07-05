@@ -341,18 +341,26 @@ a:hover { text-decoration: underline; }
     border-top: 1px solid var(--border);
 }
 
-/* --- WooCommerce products shortcode (strona Sklep) --- */
+/* --- WooCommerce products shortcode (strona Sklep) ---
+   Wymuszamy nasz uklad (!important) - domyslne style WooCommerce
+   (float/procentowe szerokosci, wlasny grid z --columns) potrafia
+   kolidowac z nasza siatka i psuc rozmiar kart/zdjec/przycisku. */
 .woocommerce ul.products {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px !important;
     list-style: none;
     padding: 0;
     margin: 20px 0 72px;
+    width: 100%;
 }
 
-@media (max-width: 900px) { .woocommerce ul.products { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 560px) { .woocommerce ul.products { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+    .woocommerce ul.products { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 560px) {
+    .woocommerce ul.products { grid-template-columns: 1fr !important; }
+}
 
 .woocommerce ul.products li.product {
     background: var(--bg-elevated);
@@ -360,15 +368,30 @@ a:hover { text-decoration: underline; }
     border-radius: var(--radius);
     padding: 20px;
     text-align: center;
+    width: 100% !important;
+    max-width: none !important;
+    float: none !important;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .woocommerce ul.products li.product img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
     border-radius: calc(var(--radius) - 4px);
+    margin: 0 0 14px !important;
 }
 
 .woocommerce ul.products li.product .woocommerce-loop-product__title {
     color: var(--text);
     font-size: 1rem;
+    margin: 0 0 6px;
 }
 
 .woocommerce ul.products li.product .price {
@@ -378,13 +401,16 @@ a:hover { text-decoration: underline; }
 
 .woocommerce ul.products li.product .button {
     display: inline-block;
-    margin-top: 10px;
-    padding: 10px 20px;
+    width: auto;
+    white-space: nowrap;
+    margin-top: 12px;
+    padding: 10px 22px;
     border-radius: 999px;
     background: var(--accent-2);
     color: #fff !important;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.85rem;
+    line-height: 1.2;
     border: none;
 }
