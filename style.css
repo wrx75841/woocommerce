@@ -245,6 +245,37 @@ a:hover { text-decoration: underline; }
 .fact-card h3 { margin: 0 0 4px; font-size: 1rem; color: var(--text); }
 .fact-card p { margin: 0; color: var(--text-muted); font-size: 0.85rem; }
 
+/* --- Gallery --- */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 20px 0 12px;
+}
+
+@media (max-width: 780px) {
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+.gallery img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.gallery img:hover { transform: scale(1.03); }
+
+.photo-credit {
+    text-align: right;
+    margin: 0 0 88px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+
 /* --- Why we love her --- */
 .love {
     border-top: 1px solid var(--border);
