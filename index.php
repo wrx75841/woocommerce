@@ -19,10 +19,15 @@
 <div class="wrap">
     <nav class="site-nav">
         <div class="brand">Test<span>Deploy</span></div>
-        <ul>
-            <li><a href="#features">Funkcje</a></li>
-            <li><a href="#status">Status</a></li>
-        </ul>
+        <?php
+        wp_nav_menu( array(
+            'theme_location' => 'primary',
+            'container'      => false,
+            'menu_class'     => '',
+            'items_wrap'     => '<ul>%3$s</ul>',
+            'fallback_cb'    => 'test_deploy_theme_fallback_menu',
+        ) );
+        ?>
     </nav>
 </div>
 
