@@ -103,6 +103,14 @@
     </div>
 </header>
 
+<div class="wrap">
+    <div class="fact-of-the-day">
+        <span class="fact-of-the-day-label">🐾 Ciekawostka o psach</span>
+        <p id="dog-fact">Ladowanie ciekawostki...</p>
+        <button type="button" id="dog-fact-refresh" class="btn btn-secondary">Losuj kolejna</button>
+    </div>
+</div>
+
 <div class="wrap" id="o-jadzi">
     <div class="section-heading">
         <h2>O Jadzi</h2>

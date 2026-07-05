@@ -12,6 +12,36 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		} );
 	} );
 
+	// Dynamiczna ciekawostka o psach (pobierana z serwera WordPressa, ktory
+	// z kolei pyta zewnetrzne API dogapi.dog - patrz functions.php).
+	var factEl = document.getElementById( 'dog-fact' );
+	var refreshBtn = document.getElementById( 'dog-fact-refresh' );
+
+	function loadDogFact() {
+		if ( ! factEl || typeof fanclubJadzi === 'undefined' ) {
+			return;
+		}
+		factEl.textContent = 'Ladowanie ciekawostki...';
+		fetch( fanclubJadzi.ajaxUrl + '?action=fanclub_jadzi_dog_fact' )
+			.then( function ( response ) { return response.json(); } )
+			.then( function ( result ) {
+				if ( result.success && result.data && result.data.fact ) {
+					factEl.textContent = result.data.fact;
+				} else {
+					factEl.textContent = 'Nie udalo sie pobrac ciekawostki. Sprobuj ponownie.';
+				}
+			} )
+			.catch( function () {
+				factEl.textContent = 'Nie udalo sie pobrac ciekawostki. Sprobuj ponownie.';
+			} );
+	}
+
+	loadDogFact();
+
+	if ( refreshBtn ) {
+		refreshBtn.addEventListener( 'click', loadDogFact );
+	}
+
 	// Animacja "wjazdu" kart faktow o Jadzi podczas przewijania strony.
 	var cards = document.querySelectorAll( '.fact-card' );
 

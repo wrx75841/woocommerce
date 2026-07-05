@@ -212,6 +212,33 @@ a:hover { text-decoration: underline; }
 .hero-art { display: flex; justify-content: center; }
 .hero-art svg { width: 100%; max-width: 320px; height: auto; }
 
+/* --- Fact of the day (dynamic, via AJAX -> dogapi.dog) --- */
+.fact-of-the-day {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 88px;
+}
+
+.fact-of-the-day-label {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+}
+
+.fact-of-the-day p {
+    margin: 0 0 18px;
+    font-size: 1.05rem;
+    color: var(--text);
+}
+
 /* --- Section heading --- */
 .section-heading { text-align: center; margin: 0 0 40px; }
 .section-heading h2 { font-size: 1.9rem; margin: 0 0 8px; }
