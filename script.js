@@ -1,6 +1,6 @@
 document.addEventListener( 'DOMContentLoaded', function () {
 
-	// Plynne przewijanie do sekcji po kliknieciu w linki z kotwica (#kategorie, #dlaczego-my).
+	// Plynne przewijanie do sekcji po kliknieciu w linki z kotwica (#o-jadzi, #dolacz).
 	document.querySelectorAll( 'a[href^="#"]' ).forEach( function ( link ) {
 		link.addEventListener( 'click', function ( event ) {
 			var target = document.querySelector( link.getAttribute( 'href' ) );
@@ -12,8 +12,8 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		} );
 	} );
 
-	// Animacja "wjazdu" kart kategorii podczas przewijania strony.
-	var cards = document.querySelectorAll( '.category-card' );
+	// Animacja "wjazdu" kart faktow o Jadzi podczas przewijania strony.
+	var cards = document.querySelectorAll( '.fact-card' );
 
 	if ( ! cards.length ) {
 		return;
