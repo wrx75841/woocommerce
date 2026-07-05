@@ -144,7 +144,16 @@ a:hover { text-decoration: underline; }
 .site-nav ul a:hover { color: var(--text); text-decoration: none; }
 
 @media (max-width: 780px) {
-    .site-nav ul { display: none; }
+    .site-nav {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+    .site-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px 20px;
+    }
 }
 
 /* --- Hero --- */

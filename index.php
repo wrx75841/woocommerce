@@ -26,8 +26,8 @@
             <path d="M50,65 Q30,50 38,30" stroke="var(--accent)" stroke-width="8" fill="none" stroke-linecap="round" />
         </g>
         <g class="beagle-head">
-            <ellipse cx="155" cy="68" rx="13" ry="24" style="fill:var(--accent)" transform="rotate(20 155 68)" />
             <circle cx="168" cy="55" r="26" style="fill:#f2dcb8" />
+            <ellipse cx="158" cy="80" rx="11" ry="23" style="fill:var(--accent)" transform="rotate(15 158 80)" />
             <circle cx="176" cy="48" r="3" style="fill:#2a1a10" />
             <ellipse cx="192" cy="62" rx="15" ry="10" style="fill:#fff8ec" transform="rotate(20 192 62)" />
             <circle cx="203" cy="66" r="4.5" style="fill:#2a1a10" />
