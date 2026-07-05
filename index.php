@@ -105,8 +105,8 @@
 
 <div class="wrap">
     <div class="fact-of-the-day">
-        <span class="fact-of-the-day-label">🐾 Ciekawostka o psach</span>
-        <p id="dog-fact">Ladowanie ciekawostki...</p>
+        <span class="fact-of-the-day-label">🐾 Ciekawostka o biglach</span>
+        <p id="dog-fact">Wlacz JavaScript, aby zobaczyc losowa ciekawostke.</p>
         <button type="button" id="dog-fact-refresh" class="btn btn-secondary">Losuj kolejna</button>
     </div>
 </div>
