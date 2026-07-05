@@ -15,6 +15,35 @@
 </head>
 <body <?php body_class(); ?>>
 
+<div class="sniff-strip" aria-hidden="true">
+    <svg viewBox="0 0 230 120" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="75" rx="55" ry="26" style="fill:var(--accent)" />
+        <line x1="70" y1="95" x2="65" y2="115" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" />
+        <line x1="90" y1="98" x2="88" y2="118" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" />
+        <line x1="130" y1="98" x2="132" y2="118" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" />
+        <line x1="150" y1="95" x2="155" y2="115" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" />
+        <g class="beagle-tail">
+            <path d="M50,65 Q30,50 38,30" stroke="var(--accent)" stroke-width="8" fill="none" stroke-linecap="round" />
+        </g>
+        <g class="beagle-head">
+            <ellipse cx="155" cy="68" rx="13" ry="24" style="fill:var(--accent)" transform="rotate(20 155 68)" />
+            <circle cx="168" cy="55" r="26" style="fill:#f2dcb8" />
+            <circle cx="176" cy="48" r="3" style="fill:#2a1a10" />
+            <ellipse cx="192" cy="62" rx="15" ry="10" style="fill:#fff8ec" transform="rotate(20 192 62)" />
+            <circle cx="203" cy="66" r="4.5" style="fill:#2a1a10" />
+            <g class="sniff-line">
+                <path d="M210,58 Q216,52 212,46" stroke="var(--accent-2)" stroke-width="2" fill="none" stroke-linecap="round" />
+            </g>
+            <g class="sniff-line">
+                <path d="M214,64 Q222,60 220,52" stroke="var(--accent-2)" stroke-width="2" fill="none" stroke-linecap="round" />
+            </g>
+            <g class="sniff-line">
+                <path d="M208,68 Q214,74 210,80" stroke="var(--accent-2)" stroke-width="2" fill="none" stroke-linecap="round" />
+            </g>
+        </g>
+    </svg>
+</div>
+
 <div class="wrap">
     <nav class="site-nav">
         <div class="brand">

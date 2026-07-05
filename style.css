@@ -44,6 +44,77 @@ a:hover { text-decoration: underline; }
 
 .wrap { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
 
+/* --- Sniffing beagle strip (top of page) --- */
+.sniff-strip {
+    position: relative;
+    height: 64px;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+}
+
+.sniff-strip svg {
+    position: absolute;
+    top: 6px;
+    left: -120px;
+    width: 110px;
+    height: auto;
+    animation: sniff-walk 14s linear infinite;
+}
+
+@keyframes sniff-walk {
+    from { left: -120px; }
+    to { left: 100%; }
+}
+
+.beagle-head {
+    transform-box: fill-box;
+    transform-origin: 80% 55%;
+    animation: sniff-bob 1.3s ease-in-out infinite;
+}
+
+@keyframes sniff-bob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    30% { transform: translateY(3px) rotate(-7deg); }
+    65% { transform: translateY(-1px) rotate(3deg); }
+}
+
+.beagle-tail {
+    transform-box: fill-box;
+    transform-origin: 0% 50%;
+    animation: tail-wag 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes tail-wag {
+    from { transform: rotate(-8deg); }
+    to { transform: rotate(12deg); }
+}
+
+.sniff-line {
+    opacity: 0;
+    transform-box: fill-box;
+    animation: sniff-fade 1.3s ease-in-out infinite;
+}
+
+.sniff-line:nth-of-type(1) { animation-delay: 0s; }
+.sniff-line:nth-of-type(2) { animation-delay: 0.2s; }
+.sniff-line:nth-of-type(3) { animation-delay: 0.4s; }
+
+@keyframes sniff-fade {
+    0% { opacity: 0; transform: translate(0, 0); }
+    40% { opacity: 1; }
+    100% { opacity: 0; transform: translate(6px, -8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sniff-strip svg,
+    .beagle-head,
+    .beagle-tail,
+    .sniff-line {
+        animation: none !important;
+    }
+}
+
 /* --- Nav --- */
 .site-nav {
     display: flex;
