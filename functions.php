@@ -18,9 +18,12 @@ function fanclub_jadzi_fallback_menu() {
     $galeria_page = get_page_by_path( 'galeria' );
     $galeria_url  = $galeria_page ? get_permalink( $galeria_page ) : home_url( '/galeria/' );
 
+    $sklep_page = get_page_by_path( 'sklep' );
+    $sklep_url  = $sklep_page ? get_permalink( $sklep_page ) : home_url( '/sklep/' );
+
     // Sekcje #o-jadzi i #dolacz istnieja tylko na stronie glownej - z
-    // innych stron (np. Galerii) link musi najpierw tam zaprowadzic,
-    // inaczej kotwica nie ma czego znalezc.
+    // innych stron (np. Galerii, Sklepu) link musi najpierw tam
+    // zaprowadzic, inaczej kotwica nie ma czego znalezc.
     $home_url    = home_url( '/' );
     $o_jadzi_url = is_front_page() ? '#o-jadzi' : $home_url . '#o-jadzi';
     $dolacz_url  = is_front_page() ? '#dolacz' : $home_url . '#dolacz';
@@ -28,6 +31,7 @@ function fanclub_jadzi_fallback_menu() {
     echo '<ul>'
         . '<li><a href="' . esc_url( $o_jadzi_url ) . '">O Jadzi</a></li>'
         . '<li><a href="' . esc_url( $galeria_url ) . '">Galeria</a></li>'
+        . '<li><a href="' . esc_url( $sklep_url ) . '">Sklep</a></li>'
         . '<li><a href="' . esc_url( $dolacz_url ) . '">Dolacz</a></li>'
         . '</ul>';
 }
