@@ -197,6 +197,21 @@ a:hover { text-decoration: underline; }
     font-size: 0.95rem;
 }
 
+/* Poczatkowy stan (przed wjazdem) - JS dodaje .is-visible, gdy karta
+   wjezdza w widoczny obszar strony (patrz script.js). Bez JS (np.
+   wylaczony w przegladarce) karty i tak zostaja w pelni widoczne, bo
+   .is-visible jest dodawane od razu jako fallback. */
+.feature-card {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.feature-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* --- Status strip --- */
 .status-strip {
     border-top: 1px solid var(--border);
