@@ -98,6 +98,20 @@ $shop_url = ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 
     </div>
 </div>
 
+<div class="wrap" id="produkty">
+    <div class="section-heading">
+        <h2>Nasze produkty</h2>
+        <p>To, co akurat mamy w ofercie - dodawane na biezaco.</p>
+    </div>
+    <?php
+    if ( function_exists( 'wc_get_products' ) ) {
+        echo do_shortcode( '[products limit="12" columns="4"]' );
+    } else {
+        echo '<p style="text-align:center;color:var(--text-muted);">Sklep jeszcze sie budzi - wroc za chwile.</p>';
+    }
+    ?>
+</div>
+
 <footer class="site-footer">
     <div class="wrap">
         &copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?> — Fanclub Jadzi 🐾
