@@ -272,20 +272,17 @@ a:hover { text-decoration: underline; }
 .fact-card h3 { margin: 0 0 4px; font-size: 1rem; color: var(--text); }
 .fact-card p { margin: 0; color: var(--text-muted); font-size: 0.85rem; }
 
-/* --- Gallery --- */
+/* --- Gallery (osobna strona - page-galeria.php) --- */
 .gallery {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 16px;
     margin: 20px 0 12px;
 }
 
-@media (max-width: 780px) {
-    .gallery { grid-template-columns: repeat(2, 1fr); }
-}
-
 .gallery img {
-    width: 100%;
+    width: 240px;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: var(--radius);
@@ -294,11 +291,15 @@ a:hover { text-decoration: underline; }
     transition: transform 0.3s ease;
 }
 
+@media (max-width: 560px) {
+    .gallery img { width: 100%; max-width: 320px; }
+}
+
 .gallery img:hover { transform: scale(1.03); }
 
 .photo-credit {
-    text-align: right;
-    margin: 0 0 88px;
+    text-align: center;
+    margin: 0 0 64px;
     color: var(--text-muted);
     font-size: 0.78rem;
 }

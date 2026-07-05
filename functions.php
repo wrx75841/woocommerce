@@ -13,7 +13,6 @@ add_action( 'after_setup_theme', 'fanclub_jadzi_setup' );
 function fanclub_jadzi_fallback_menu() {
     echo '<ul>'
         . '<li><a href="#o-jadzi">O Jadzi</a></li>'
-        . '<li><a href="#galeria">Galeria</a></li>'
         . '<li><a href="#dolacz">Dolacz</a></li>'
         . '</ul>';
 }
