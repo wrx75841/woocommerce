@@ -11,9 +11,24 @@ add_action( 'after_setup_theme', 'fanclub_jadzi_setup' );
 // Pokazywane, dopoki w Wygladzie -> Menu nie przypiszesz wlasnego menu do
 // lokalizacji "Menu glowne".
 function fanclub_jadzi_fallback_menu() {
+    // Jesli strona "Galeria" (slug /galeria/) juz istnieje, linkujemy do
+    // jej prawdziwego adresu. Jesli jeszcze nie zostala utworzona w
+    // wp-admin, linkujemy do przewidywanego adresu /galeria/ - zadziala
+    // sam, gdy tylko taka strona powstanie.
+    $galeria_page = get_page_by_path( 'galeria' );
+    $galeria_url  = $galeria_page ? get_permalink( $galeria_page ) : home_url( '/galeria/' );
+
+    // Sekcje #o-jadzi i #dolacz istnieja tylko na stronie glownej - z
+    // innych stron (np. Galerii) link musi najpierw tam zaprowadzic,
+    // inaczej kotwica nie ma czego znalezc.
+    $home_url    = home_url( '/' );
+    $o_jadzi_url = is_front_page() ? '#o-jadzi' : $home_url . '#o-jadzi';
+    $dolacz_url  = is_front_page() ? '#dolacz' : $home_url . '#dolacz';
+
     echo '<ul>'
-        . '<li><a href="#o-jadzi">O Jadzi</a></li>'
-        . '<li><a href="#dolacz">Dolacz</a></li>'
+        . '<li><a href="' . esc_url( $o_jadzi_url ) . '">O Jadzi</a></li>'
+        . '<li><a href="' . esc_url( $galeria_url ) . '">Galeria</a></li>'
+        . '<li><a href="' . esc_url( $dolacz_url ) . '">Dolacz</a></li>'
         . '</ul>';
 }
 
