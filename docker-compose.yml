@@ -1,0 +1,161 @@
+# ==========================================================================
+# Srodowisko testowe WordPress + WooCommerce (Docker Compose)
+#
+# Uruchomienie:
+#   cp .env.example .env      # (jednorazowo, przy pierwszym starcie)
+#   docker compose up -d
+#
+# Publiczny tunel (opcjonalnie, wymaga NGROK_AUTHTOKEN w .env):
+#   docker compose --profile public up -d
+#
+# Pelny opis w readme.md.
+# ==========================================================================
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: wp_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress}
+      MYSQL_USER: ${MYSQL_USER:-wordpress}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wpnet
+    # Healthcheck jest kluczowy: bez niego "depends_on" tylko czeka, az
+    # kontener MySQL sie odpali (nie az baza faktycznie przyjmuje polaczenia).
+    # Wczesniej powodowalo to gonienie sie w kolko przy instalacji WP
+    # (rozwiazywane wczesniej "na sztywno" przez sleep 20 w wpcli).
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wp_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-wordpress}
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+      # Klucze WooCommerce REST API (wygenerowane w panelu: WooCommerce ->
+      # Ustawienia -> Zaawansowane -> REST API). Dostepne wewnatrz kontenera
+      # jako zmienne srodowiskowe (getenv('WOOCOMMERCE_CONSUMER_KEY') w PHP),
+      # np. dla wlasnego kodu/wtyczki laczacej sie z REST API tego sklepu.
+      WOOCOMMERCE_CONSUMER_KEY: ${WOOCOMMERCE_CONSUMER_KEY:-}
+      WOOCOMMERCE_CONSUMER_SECRET: ${WOOCOMMERCE_CONSUMER_SECRET:-}
+      # ---------------------------------------------------------------
+      # DLACZEGO TO JEST WAZNE:
+      # WordPress domyslnie zapamietuje adres strony (opcje "siteurl" i
+      # "home") NA SZTYWNO w bazie danych. Jesli ta sama instalacja ma byc
+      # dostepna jednoczesnie pod http://localhost:8080 ORAZ pod adresem
+      # publicznym (np. tunel ngrok/cloudflared, ktory zmienia sie przy
+      # kazdym restarcie), sztywny adres psuje linki, przekierowania i
+      # zasoby (JS/CSS) pod tym drugim adresem (bylo to zrodlem bledow
+      # "strona sie nie laduje" przy korzystaniu z ngrok).
+      #
+      # Ponizszy kod PHP jest wstrzykiwany do wp-config.php przez
+      # wbudowany w oficjalny obraz mechanizm WORDPRESS_CONFIG_EXTRA.
+      # Sam wykrywa host/schemat z aktualnego zadania HTTP i ustawia
+      # WP_HOME/WP_SITEURL dynamicznie - dziala jednoczesnie lokalnie
+      # i przez dowolny tunel, bez rêcznej zmiany "siteurl"/"home" w bazie.
+      #
+      # UWAGA: znaki "$" sa celowo podwojone ("$$") - to wymog docker
+      # compose (pojedynczy "$" probowalby podstawic zmienna srodowiskowa
+      # compose zamiast przekazac literalny znak "$" do PHP).
+      # ---------------------------------------------------------------
+      WORDPRESS_CONFIG_EXTRA: |
+        if ( ! defined( 'WP_HOME' ) && isset( $$_SERVER['HTTP_HOST'] ) ) {
+            $$dynamic_scheme = ( isset( $$_SERVER['HTTPS'] ) && $$_SERVER['HTTPS'] === 'on' ) ? 'https://' : 'http://';
+            define( 'WP_HOME', $$dynamic_scheme . $$_SERVER['HTTP_HOST'] );
+            define( 'WP_SITEURL', $$dynamic_scheme . $$_SERVER['HTTP_HOST'] );
+        }
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - wpnet
+
+  wpcli:
+    build:
+      context: ./wpcli
+    image: wp-woo-wpcli:local
+    container_name: wp_cli
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - wp_data:/var/www/html
+    # WAZNE: obraz wordpress:cli (Alpine) ma uzytkownika "www-data" z UID 82,
+    # a obraz wordpress:latest (Debian/Apache), ktory tworzy pliki na tym
+    # samym wolumenie, ma "www-data" z UID 33 - to INNE UID mimo tej samej
+    # nazwy. Bez wymuszenia tego samego UID tutaj, wp-cli nie moze zapisac
+    # (nadpisac) plikow zaposiadanych przez kontener wordpress, np. .htaccess
+    # (co objawia sie ciche niedzialajacym "wp rewrite flush").
+    user: "33:33"
+    environment:
+      # Bez wlasnego wpisu w /etc/passwd dla UID 33 w tym obrazie, HOME nie
+      # jest ustawiony domyslnie - a wp-cli potrzebuje zapisywalnego HOME na
+      # swoj cache (~/.wp-cli/cache).
+      HOME: /tmp
+      # wp-config.php odczytuje WORDPRESS_DB_* dynamicznie (przy kazdym
+      # wywolaniu wp-cli), NIE tylko raz przy generowaniu pliku - dlatego
+      # kontener wpcli tez musi je miec ustawione, mimo ze plik wp-config.php
+      # fizycznie tworzy kontener wordpress. Bez tego wp-cli probuje laczyc
+      # sie z domyslnym hostem "mysql", ktory nie istnieje w tej sieci.
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-wordpress}
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+      WP_URL: http://localhost:${WP_PORT:-8080}
+      WP_TITLE: ${WP_TITLE:-Test Store}
+      WP_ADMIN_USER: ${WP_ADMIN_USER:-admin}
+      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD:-admin123}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL:-admin@example.com}
+    networks:
+      - wpnet
+
+  # ------------------------------------------------------------------------
+  # OPCJONALNY publiczny tunel ngrok.
+  # Nie uruchamia sie domyslnym "docker compose up" - trzeba jawnie podac
+  # profil:  docker compose --profile public up -d
+  # Wymaga NGROK_AUTHTOKEN w pliku .env (patrz .env.example).
+  #
+  # Domyslnie ngrok wygeneruje losowy adres *.ngrok-free.app przy kazdym
+  # starcie. Jesli masz zarezerwowana, stala domene na koncie ngrok, dodaj
+  # w "command" ponizej linijke "--url=${NGROK_DOMAIN}" (patrz komentarz).
+  # ------------------------------------------------------------------------
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: wp_ngrok
+    restart: unless-stopped
+    profiles: ["public"]
+    depends_on:
+      - wordpress
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    command:
+      - "http"
+      # Staly, zarezerwowany adres z .env (NGROK_DOMAIN) - zeby nie zmienial
+      # sie przy kazdym restarcie kontenera:
+      - "--url=${NGROK_DOMAIN}"
+      - "wordpress:80"
+    networks:
+      - wpnet
+
+networks:
+  wpnet:
+
+volumes:
+  db_data:
+  wp_data:

@@ -1,0 +1,10 @@
+# Sekrety i konfiguracja lokalna - nigdy nie commitowac
+.env
+
+# Srodowisko wirtualne Python (deploy-test.py)
+.venv/
+__pycache__/
+*.pyc
+
+# Typowe smieci systemowe
+.DS_Store
